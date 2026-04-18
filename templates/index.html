@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraDraw | AI Hand Tracking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --surface: rgba(30, 41, 59, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text: #F8FAFC;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at center, #1E1B4B, #0F172A);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Top Navigation */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #818CF8, #C084FC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Wrapper */
+    .container {
+      display: flex;
+      flex: 1;
+      gap: 2rem;
+      padding: 2rem;
+      height: calc(100vh - 80px);
+      box-sizing: border-box;
+    }
+
+    /* Control Panel */
+    .sidebar {
+      width: 300px;
+      padding: 2rem;
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #94A3B8;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    /* Color Pickers */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .color-btn {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .color-btn:hover {
+      transform: scale(1.15);
+    }
+    
+    .color-btn.active {
+      border-color: white;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px currentColor;
+    }
+
+    /* Eraser & Clear Buttons */
+    .action-btn {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .action-btn.danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #FCA5A5;
+    }
+    
+    .action-btn.danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+    
+    .action-btn.success {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #34D399;
+    }
+    .action-btn.success:hover { background: rgba(16, 185, 129, 0.2); }
+
+    /* Settings UI */
+    .slider-container { margin-top: 0.5rem; }
+    input[type=range] { width: 100%; accent-color: var(--primary); }
+    
+    .bg-segment {
+      display: flex; background: rgba(0,0,0,0.3);
+      border-radius: 8px; overflow: hidden; margin-top: 0.5rem;
+    }
+    .bg-btn {
+      flex: 1; padding: 0.5rem; border: none; background: transparent;
+      color: #94A3B8; cursor: pointer; font-size: 0.8rem;
+      font-weight: 600; transition: all 0.2s;
+    }
+    .bg-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+    .bg-btn.active { background: var(--primary); color: white; }
+
+    /* Guides/Instructions */
+    .guide-card {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .guide-icon {
+      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+
+    .guide-text h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .guide-text p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #94A3B8;
+    }
+
+    /* Camera Feed */
+    .feed-container {
+      flex: 1;
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--glass-border);
+      background: #000;
+    }
+
+    .feed-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1); /* Mirror fix if needed, though OpenCV usually handles it */
+    }
+
+    .status-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34D399;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: blur(4px);
+    }
+    
+    .pulse {
+      width: 8px;
+      height: 8px;
+      background: #34D399;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #34D399;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">AuraDraw Web ✨</div>
+  </nav>
+
+  <div class="container">
+    <div class="sidebar">
+      <div>
+        <div class="section-title">Brush Color</div>
+        <div class="color-grid">
+          <button class="color-btn active" style="background:#EF4444; color:#EF4444;" onclick="setColor('red', this)"></button>
+          <button class="color-btn" style="background:#3B82F6; color:#3B82F6;" onclick="setColor('blue', this)"></button>
+          <button class="color-btn" style="background:#10B981; color:#10B981;" onclick="setColor('green', this)"></button>
+          <button class="color-btn" style="background:#F59E0B; color:#F59E0B;" onclick="setColor('yellow', this)"></button>
+          <button class="color-btn" style="background:#8B5CF6; color:#8B5CF6;" onclick="setColor('purple', this)"></button>
+          <button class="color-btn" style="background:#EC4899; color:#EC4899;" onclick="setColor('pink', this)"></button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Brush Style</div>
+        <div class="slider-container">
+          <label style="font-size:0.8rem; color:#94A3B8; display:flex; justify-content:space-between;">
+            <span>Thickness</span>
+            <span id="brushSizeViewer">6px</span>
+          </label>
+          <input type="range" min="2" max="60" value="6" oninput="setThickness(this.value)" />
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Background</div>
+        <div class="bg-segment">
+          <button class="bg-btn active" onclick="setBg('camera', this)">Camera</button>
+          <button class="bg-btn" onclick="setBg('black', this)">Black</button>
+          <button class="bg-btn" onclick="setBg('white', this)">White</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Actions</div>
+        <div style="display:flex; flex-direction: column; gap:1rem;">
+          <button class="action-btn" onclick="setColor('eraser', this)">
+            <span style="font-size:1.2rem;">🧽</span> Eraser Mode
+          </button>
+          <button class="action-btn danger" onclick="clearCanvas()">
+            <span style="font-size:1.2rem;">🗑️</span> Clear Canvas
+          </button>
+          <button class="action-btn success" onclick="saveImage()">
+            <span style="font-size:1.2rem;">💾</span> Save Masterpiece
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;">
+        <div class="section-title">Hand Gestures</div>
+        <div class="guide-card">
+          <div class="guide-icon">☝️</div>
+          <div class="guide-text">
+            <h4>Draw</h4>
+            <p>Raise Index Finger</p>
+          </div>
+        </div>
+        <div class="guide-card">
+          <div class="guide-icon">🖐️</div>
+          <div class="guide-text">
+            <h4>Clear Board</h4>
+            <p>Raise All Fingers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feed-container">
+      <div class="status-badge">
+        <div class="pulse"></div> Tracking Active
+      </div>
+      <img src="/video_feed" alt="Video Feed" />
+    </div>
+  </div>
+
+  <script>
+    function setColor(colorName, btn) {
+      if(btn && colorName !== 'eraser') {
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
+      } else if (btn && colorName === 'eraser') {
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      
+      fetch(`/set_color/${colorName}`)
+        .then(res => res.json())
+        .then(data => console.log('Color set:', data));
+    }
+
+    function clearCanvas() {
+      fetch('/clear')
+        .then(res => res.json())
+        .then(data => console.log('Canvas cleared:', data));
+    }
+
+    function setThickness(val) {
+      document.getElementById('brushSizeViewer').innerText = val + 'px';
+      fetch(`/set_thickness/${val}`);
+    }
+
+    function setBg(mode, btn) {
+      document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      fetch(`/set_bg/${mode}`);
+    }
+
+    function saveImage() {
+      // Trigger a raw download using the save_image endpoint
+      window.open('/save_image', '_blank');
+    }
+  </script>
+</body>
+</html>
