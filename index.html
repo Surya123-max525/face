@@ -49,7 +49,7 @@
       font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;
       color: #94A3B8; margin-bottom: 1rem; font-weight: 600;
     }
-    .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
     .color-btn {
       aspect-ratio: 1; border-radius: 50%; border: 3px solid transparent;
       cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -102,6 +102,13 @@
       width: 8px; height: 8px; background: #34D399; border-radius: 50%; animation: pulse 2s infinite;
     }
     @keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(52,211,153,0.7);} 70% {box-shadow: 0 0 0 10px rgba(52,211,153,0);} }
+    .toast {
+      position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+      background: rgba(16, 185, 129, 0.9); color: white; padding: 0.75rem 2rem;
+      border-radius: 30px; font-weight: 600; box-shadow: 0 10px 25px rgba(16,185,129,0.3);
+      transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100;
+    }
+    .toast.show { bottom: 2rem; }
   </style>
 </head>
 <body>
@@ -118,6 +125,10 @@
           <button class="color-btn" style="background:#F59E0B; color:#F59E0B;" onclick="setColor('#F59E0B', this)"></button>
           <button class="color-btn" style="background:#8B5CF6; color:#8B5CF6;" onclick="setColor('#8B5CF6', this)"></button>
           <button class="color-btn" style="background:#EC4899; color:#EC4899;" onclick="setColor('#EC4899', this)"></button>
+          <div style="position:relative; aspect-ratio:1;">
+            <button class="color-btn" style="background:conic-gradient(red, yellow, lime, aqua, blue, magenta, red); width:100%; height:100%; cursor:pointer;" id="customColorBtn"></button>
+            <input type="color" id="customColor" style="opacity:0; position:absolute; top:0; left:0; width:100%; height:100%; cursor:pointer;" onchange="setCustomColor(this.value)" />
+          </div>
         </div>
       </div>
       <div>
@@ -127,6 +138,12 @@
             <span>Thickness</span><span id="brushSizeViewer">6px</span>
           </label>
           <input type="range" min="2" max="60" value="6" oninput="setThickness(this.value)" />
+          
+          <label style="font-size:0.8rem; color:#94A3B8; display:flex; justify-content:space-between; margin-top:1rem;">
+            <span>AI Smoothness</span><span id="smoothnessViewer">High</span>
+          </label>
+          <input type="range" min="1" max="10" value="3" oninput="setSmoothness(this.value)" />
+          
           <div style="margin-top: 1rem; display:flex; align-items:center; gap: 0.5rem; cursor:pointer;">
             <input type="checkbox" id="neonGlow" onchange="toggleNeon(this.checked)" style="width:auto; accent-color:var(--primary);"/>
             <label for="neonGlow" style="font-size: 0.8rem; color: #94A3B8; cursor:pointer; font-weight:600;">✨ Enable Neon Glow</label>
@@ -176,6 +193,8 @@
       <canvas class="output_canvas" width="1280" height="720"></canvas>
     </div>
   </div>
+  
+  <div class="toast" id="toast">✅ Action completed!</div>
 
   <script>
     // --- Global State ---
@@ -188,7 +207,7 @@
     let paths = []; // Stores all drawing paths: { color, thickness, isEraser, neon, points: [{x,y}] }
     let currentPath = null;
     let smoothX = 0, smoothY = 0;
-    const alpha = 0.3; // Smoothing factor
+    let alpha = 0.3; // Smoothing factor
     let lostFrames = 0;
 
     // --- DOM Elements ---
@@ -213,6 +232,25 @@
       brushThickness = parseInt(val, 10);
       document.getElementById('brushSizeViewer').innerText = val + 'px';
     }
+    function setSmoothness(val) {
+      alpha = parseInt(val) / 10;
+      let label = "High";
+      if(val > 3 && val <= 7) label = "Med";
+      if(val > 7) label = "Low";
+      document.getElementById('smoothnessViewer').innerText = label;
+    }
+    function setCustomColor(color) {
+      setColor(color, document.getElementById('customColorBtn'));
+      const btn = document.getElementById('customColorBtn');
+      btn.style.boxShadow = `0 0 15px ${color}`;
+      btn.style.borderColor = 'white';
+    }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
     function setBg(mode, btn) {
       bgMode = mode;
       document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
@@ -230,6 +268,7 @@
     function clearCanvas() {
       paths = [];
       currentPath = null;
+      showToast('🗑️ Canvas Cleared!');
     }
     function undoPath() {
       if(paths.length > 0) {
@@ -245,6 +284,7 @@
       link.href = canvasElement.toDataURL();
       link.click();
       canvasElement.style.transform = "scaleX(-1)";
+      showToast('💾 Masterpiece Saved!');
     }
 
     // --- Hand Tracking Logic ---
