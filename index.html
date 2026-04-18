@@ -26,7 +26,7 @@
     }
     nav {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 1.5rem 3rem; background: rgba(15, 23, 42, 0.6);
+      padding: 1rem 3rem; background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(12px); border-bottom: 1px solid var(--glass-border); z-index: 10;
     }
     .logo {
@@ -36,72 +36,84 @@
       letter-spacing: 1px;
     }
     .container {
-      display: flex; flex: 1; gap: 2rem; padding: 2rem;
-      height: calc(100vh - 80px); box-sizing: border-box;
+      display: flex; flex-direction: column; flex: 1; gap: 1rem; padding: 1.5rem;
+      height: calc(100vh - 70px); box-sizing: border-box;
     }
-    .sidebar {
-      width: 300px; padding: 2rem; background: var(--surface);
-      backdrop-filter: blur(20px); border-radius: 24px;
-      border: 1px solid var(--glass-border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto;
+    
+    /* Top Toolbar Styling */
+    .toolbar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; padding: 1rem 2rem;
+      background: var(--surface); backdrop-filter: blur(20px); border-radius: 20px;
+      border: 1px solid var(--glass-border); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
-    .section-title {
-      font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;
-      color: #94A3B8; margin-bottom: 1rem; font-weight: 600;
+    .toolbar-group {
+      display: flex; align-items: center; gap: 1rem; padding-right: 1.5rem;
+      border-right: 1px solid rgba(255,255,255,0.1);
     }
-    .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+    .toolbar-group:last-child {
+      border-right: none; padding-right: 0;
+    }
+    .group-label {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; font-weight: 600;
+      position: absolute; top: -20px; white-space: nowrap;
+    }
+    .group-wrapper { position: relative; display: flex; align-items: center; gap: 0.75rem; margin-top: 15px; }
+
+    /* Colors */
+    .color-row { display: flex; gap: 0.5rem; }
     .color-btn {
-      aspect-ratio: 1; border-radius: 50%; border: 3px solid transparent;
-      cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent;
+      cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .color-btn:hover { transform: scale(1.15); }
-    .color-btn.active { border-color: white; transform: scale(1.1); box-shadow: 0 0 15px currentColor; }
+    .color-btn.active { border-color: white; transform: scale(1.1); box-shadow: 0 0 10px currentColor; }
     
-    .slider-container { margin-top: 0.5rem; }
-    input[type=range] { width: 100%; accent-color: var(--primary); }
-    
+    /* Segment Control (Buttons) */
     .bg-segment {
-      display: flex; background: rgba(0,0,0,0.3);
-      border-radius: 8px; overflow: hidden; margin-top: 0.5rem;
+      display: flex; background: rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden;
     }
     .bg-btn {
-      flex: 1; padding: 0.5rem; border: none; background: transparent;
-      color: #94A3B8; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+      padding: 0.5rem 1rem; border: none; background: transparent; color: #94A3B8; cursor: pointer;
+      font-size: 0.8rem; font-weight: 600; transition: all 0.2s;
     }
+    .bg-btn:hover { color: white; background: rgba(255,255,255,0.05); }
     .bg-btn.active { background: var(--primary); color: white; }
     
+    /* Action Buttons */
     .action-btn {
-      width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border);
-      background: rgba(255, 255, 255, 0.05); color: white; font-weight: 600;
-      cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.6rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05); color: white; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.4rem;
     }
-    .action-btn:hover { background: rgba(255, 255, 255, 0.1); }
+    .action-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
     .action-btn.danger { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #FCA5A5; }
     .action-btn.success { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #34D399; }
     
+    /* Sliders and Toggles */
+    .slider-wrap { display: flex; flex-direction: column; width: 120px; }
+    .slider-wrap label { font-size: 0.7rem; color: #94A3B8; display: flex; justify-content: space-between; margin-bottom: 2px;}
+    input[type=range] { width: 100%; height: 4px; accent-color: var(--primary); cursor: pointer; }
+    
+    .checkbox-wrap { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: #CBD5E1; cursor: pointer;}
+    .checkbox-wrap input { accent-color: var(--primary); cursor: pointer; }
+
+    /* Feed Canvas */
     .feed-container {
-      flex: 1; position: relative; border-radius: 24px; overflow: hidden;
+      flex: 1; position: relative; border-radius: 20px; overflow: hidden;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid var(--glass-border);
-      background: #000;
+      background: #000; display: flex; justify-content: center; align-items: center;
     }
-    /* The canvas will draw everything: camera feed (if enabled) + lines */
     canvas.output_canvas {
-      width: 100%; height: 100%; object-fit: contain; 
-      /* Mirror canvas so it moves like a mirror */
-      transform: scaleX(-1);
+      width: 100%; height: 100%; object-fit: contain; transform: scaleX(-1); transition: transform 0.3s;
     }
-    /* Hidden video element just to feed Mediapipe */
     .input_video { display: none; }
     
+    /* Badges & Toast */
     .status-badge {
       position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(16, 185, 129, 0.2);
       border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; padding: 0.5rem 1rem;
       border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; z-index: 10;
     }
-    .pulse {
-      width: 8px; height: 8px; background: #34D399; border-radius: 50%; animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(52,211,153,0.7);} 70% {box-shadow: 0 0 0 10px rgba(52,211,153,0);} }
     .toast {
       position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
       background: rgba(16, 185, 129, 0.9); color: white; padding: 0.75rem 2rem;
@@ -109,79 +121,96 @@
       transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100;
     }
     .toast.show { bottom: 2rem; }
+    .pulse { width: 8px; height: 8px; background: #34D399; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(52,211,153,0.7);} 70% {box-shadow: 0 0 0 10px rgba(52,211,153,0);} }
   </style>
 </head>
 <body>
   <nav><div class="logo">AuraDraw Web ✨</div></nav>
+  
   <div class="container">
-    <!-- UI Controls -->
-    <div class="sidebar">
-      <div>
-        <div class="section-title">Brush Color</div>
-        <div class="color-grid">
-          <button class="color-btn active" style="background:#EF4444; color:#EF4444;" onclick="setColor('#EF4444', this)"></button>
-          <button class="color-btn" style="background:#3B82F6; color:#3B82F6;" onclick="setColor('#3B82F6', this)"></button>
-          <button class="color-btn" style="background:#10B981; color:#10B981;" onclick="setColor('#10B981', this)"></button>
-          <button class="color-btn" style="background:#F59E0B; color:#F59E0B;" onclick="setColor('#F59E0B', this)"></button>
-          <button class="color-btn" style="background:#8B5CF6; color:#8B5CF6;" onclick="setColor('#8B5CF6', this)"></button>
-          <button class="color-btn" style="background:#EC4899; color:#EC4899;" onclick="setColor('#EC4899', this)"></button>
-          <div style="position:relative; aspect-ratio:1;">
-            <button class="color-btn" style="background:conic-gradient(red, yellow, lime, aqua, blue, magenta, red); width:100%; height:100%; cursor:pointer;" id="customColorBtn"></button>
-            <input type="color" id="customColor" style="opacity:0; position:absolute; top:0; left:0; width:100%; height:100%; cursor:pointer;" onchange="setCustomColor(this.value)" />
+    <!-- Top Toolbar -->
+    <div class="toolbar">
+      
+      <!-- Colors Group -->
+      <div class="toolbar-group">
+        <div class="group-wrapper">
+          <span class="group-label">Brush Color</span>
+          <div class="color-row">
+            <button class="color-btn active" style="background:#EF4444; color:#EF4444;" onclick="setColor('#EF4444', this)"></button>
+            <button class="color-btn" style="background:#3B82F6; color:#3B82F6;" onclick="setColor('#3B82F6', this)"></button>
+            <button class="color-btn" style="background:#10B981; color:#10B981;" onclick="setColor('#10B981', this)"></button>
+            <button class="color-btn" style="background:#F59E0B; color:#F59E0B;" onclick="setColor('#F59E0B', this)"></button>
+            <button class="color-btn" style="background:#8B5CF6; color:#8B5CF6;" onclick="setColor('#8B5CF6', this)"></button>
+            <button class="color-btn" style="background:#EC4899; color:#EC4899;" onclick="setColor('#EC4899', this)"></button>
+            <div style="position:relative; width:28px; height:28px;">
+              <button class="color-btn" style="background:conic-gradient(red, yellow, lime, aqua, blue, magenta, red); width:100%; height:100%;" id="customColorBtn"></button>
+              <input type="color" id="customColor" style="opacity:0; position:absolute; top:0; left:0; width:100%; height:100%; cursor:pointer;" onchange="setCustomColor(this.value)" />
+            </div>
+            <button class="color-btn" style="background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold;" onclick="setColor('eraser', this)" title="Eraser">🧽</button>
           </div>
         </div>
       </div>
-      <div>
-        <div class="section-title">Brush Style</div>
-        <div class="slider-container">
-          <label style="font-size:0.8rem; color:#94A3B8; display:flex; justify-content:space-between;">
-            <span>Thickness</span><span id="brushSizeViewer">6px</span>
-          </label>
-          <input type="range" min="2" max="60" value="6" oninput="setThickness(this.value)" />
-          
-          <label style="font-size:0.8rem; color:#94A3B8; display:flex; justify-content:space-between; margin-top:1rem;">
-            <span>AI Smoothness</span><span id="smoothnessViewer">High</span>
-          </label>
-          <input type="range" min="1" max="10" value="3" oninput="setSmoothness(this.value)" />
-          
-          <div style="margin-top: 1rem; display:flex; align-items:center; gap: 0.5rem; cursor:pointer;">
-            <input type="checkbox" id="neonGlow" onchange="toggleNeon(this.checked)" style="width:auto; accent-color:var(--primary);"/>
-            <label for="neonGlow" style="font-size: 0.8rem; color: #94A3B8; cursor:pointer; font-weight:600;">✨ Enable Neon Glow</label>
+
+      <!-- Specs Group -->
+      <div class="toolbar-group">
+        <div class="group-wrapper" style="gap:1.5rem;">
+          <span class="group-label">Brush Styles</span>
+          <div class="slider-wrap">
+            <label><span>Size</span><span id="brushSizeViewer">6px</span></label>
+            <input type="range" min="2" max="60" value="6" oninput="setThickness(this.value)" />
+          </div>
+          <div class="slider-wrap">
+            <label><span>Smoothness</span><span id="smoothnessViewer">High</span></label>
+            <input type="range" min="1" max="10" value="3" oninput="setSmoothness(this.value)" />
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.3rem;">
+             <label class="checkbox-wrap">
+               <input type="checkbox" id="neonGlow" onchange="toggleNeon(this.checked)"/> ✨ Neon Glow
+             </label>
+             <label class="checkbox-wrap">
+               <input type="checkbox" id="dashedLine" onchange="toggleDash(this.checked)"/> ➖ Dashed Line
+             </label>
           </div>
         </div>
       </div>
-      <div>
-        <div class="section-title">Draw Gesture</div>
-        <div class="bg-segment" id="gesture-segment" style="margin-top:0;">
-          <button class="bg-btn active" onclick="setGesture('index', this)">Index Up</button>
-          <button class="bg-btn" onclick="setGesture('pinch', this)">Pinch Mode</button>
+
+      <!-- Settings & Formats Group -->
+      <div class="toolbar-group">
+        <div class="group-wrapper">
+          <span class="group-label">Canvas Mode</span>
+          <div style="display:flex; flex-direction:column; gap:0.5rem;">
+            <div class="bg-segment">
+              <button class="bg-btn active" id="btn-camera" onclick="setBg('camera', this)">Camera</button>
+              <button class="bg-btn" onclick="setBg('black', this)">Dark</button>
+              <button class="bg-btn" onclick="setBg('white', this)">Light</button>
+            </div>
+            <div class="bg-segment">
+              <button class="bg-btn active" onclick="setGesture('index', this)">Index</button>
+              <button class="bg-btn" onclick="setGesture('pinch', this)">Pinch</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
-        <div class="section-title">Background</div>
-        <div class="bg-segment">
-          <button class="bg-btn active" onclick="setBg('camera', this)">Camera</button>
-          <button class="bg-btn" onclick="setBg('black', this)">Black</button>
-          <button class="bg-btn" onclick="setBg('white', this)">White</button>
-        </div>
-      </div>
-      <div>
-        <div class="section-title">Actions</div>
-        <div style="display:flex; flex-direction: column; gap:1rem;">
-          <button class="action-btn" onclick="undoPath()" style="background: rgba(255, 255, 255, 0.1);">
-            <span style="font-size:1.2rem;">↩️</span> Undo Last Stroke
+
+      <!-- Actions Group -->
+      <div class="toolbar-group" style="padding-right:0; border:none; margin-left:auto;">
+        <div class="group-wrapper" style="gap:0.75rem;">
+          <button class="action-btn" onclick="toggleMirror()" title="Flip Camera View">
+            🔄 Mirror
           </button>
-          <button class="action-btn" onclick="setColor('eraser', this)">
-            <span style="font-size:1.2rem;">🧽</span> Eraser Mode
+          <button class="action-btn" onclick="undoPath()" title="Undo Last Stroke">
+            ↩️ Undo
           </button>
           <button class="action-btn danger" onclick="clearCanvas()">
-            <span style="font-size:1.2rem;">🗑️</span> Clear Canvas
+            🗑️ Clear
           </button>
           <button class="action-btn success" onclick="saveImage()">
-            <span style="font-size:1.2rem;">💾</span> Save Masterpiece
+            💾 Save Art
           </button>
         </div>
       </div>
+      
     </div>
     
     <!-- Render Container -->
@@ -190,10 +219,10 @@
         <div class="pulse"></div> Waiting for Camera...
       </div>
       <video class="input_video"></video>
-      <canvas class="output_canvas" width="1280" height="720"></canvas>
+      <canvas class="output_canvas" id="main-canvas" width="1280" height="720"></canvas>
     </div>
   </div>
-  
+
   <div class="toast" id="toast">✅ Action completed!</div>
 
   <script>
@@ -204,7 +233,10 @@
     let bgMode = 'camera'; 
     let drawGesture = 'index';
     let neonEnabled = false;
-    let paths = []; // Stores all drawing paths: { color, thickness, isEraser, neon, points: [{x,y}] }
+    let dashEnabled = false;
+    let mirrorCamera = true;
+    
+    let paths = []; // Stores all drawing paths: { color, thickness, isEraser, neon, dash, points: [{x,y}] }
     let currentPath = null;
     let smoothX = 0, smoothY = 0;
     let alpha = 0.3; // Smoothing factor
@@ -212,7 +244,7 @@
 
     // --- DOM Elements ---
     const videoElement = document.querySelector('.input_video');
-    const canvasElement = document.querySelector('.output_canvas');
+    const canvasElement = document.getElementById('main-canvas');
     const canvasCtx = canvasElement.getContext('2d');
     const statusBadge = document.getElementById('status-badge');
 
@@ -225,9 +257,16 @@
         currentColor = color;
       }
       document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
       if(btn) btn.classList.add('active');
     }
+    
+    function setCustomColor(color) {
+      setColor(color, document.getElementById('customColorBtn'));
+      const btn = document.getElementById('customColorBtn');
+      btn.style.boxShadow = `0 0 15px ${color}`;
+      btn.style.borderColor = 'white';
+    }
+
     function setThickness(val) {
       brushThickness = parseInt(val, 10);
       document.getElementById('brushSizeViewer').innerText = val + 'px';
@@ -239,32 +278,25 @@
       if(val > 7) label = "Low";
       document.getElementById('smoothnessViewer').innerText = label;
     }
-    function setCustomColor(color) {
-      setColor(color, document.getElementById('customColorBtn'));
-      const btn = document.getElementById('customColorBtn');
-      btn.style.boxShadow = `0 0 15px ${color}`;
-      btn.style.borderColor = 'white';
-    }
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.innerText = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
-    }
     function setBg(mode, btn) {
       bgMode = mode;
-      document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+      btn.parentElement.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
       if(btn) btn.classList.add('active');
     }
     function setGesture(gesture, btn) {
       drawGesture = gesture;
-      const seg = document.getElementById('gesture-segment');
-      seg.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+      btn.parentElement.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
       if(btn) btn.classList.add('active');
     }
-    function toggleNeon(isEnabled) {
-      neonEnabled = isEnabled;
+    function toggleNeon(isEnabled) { neonEnabled = isEnabled; }
+    function toggleDash(isEnabled) { dashEnabled = isEnabled; }
+    
+    function toggleMirror() {
+      mirrorCamera = !mirrorCamera;
+      canvasElement.style.transform = mirrorCamera ? "scaleX(-1)" : "scaleX(1)";
+      showToast(mirrorCamera ? '🔄 Camera Mirrored' : '🔄 Normal View');
     }
+
     function clearCanvas() {
       paths = [];
       currentPath = null;
@@ -274,16 +306,26 @@
       if(paths.length > 0) {
         paths.pop();
         currentPath = null;
+        showToast('↩️ Stroke Undone');
       }
     }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
     function saveImage() {
-      // Temporarily remove transform mirror to save normal image
+      // Temporarily set transform to flat
+      const oldT = canvasElement.style.transform;
       canvasElement.style.transform = "scaleX(1)";
+      
       const link = document.createElement('a');
       link.download = 'auradraw_masterpiece.png';
       link.href = canvasElement.toDataURL();
       link.click();
-      canvasElement.style.transform = "scaleX(-1)";
+      
+      canvasElement.style.transform = oldT;
       showToast('💾 Masterpiece Saved!');
     }
 
@@ -315,7 +357,9 @@
       if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
         let landmarks = results.multiHandLandmarks[0];
         
-        // Convert to canvas coordinates
+        // Flipped calculation dependent on Mirror mode handled nicely by pure mapping
+        // We actually map coordinates regardless, the CSS flips the visual canvas so it matches User movements exactly.
+        
         let ix = landmarks[8].x * canvasElement.width;
         let iy = landmarks[8].y * canvasElement.height;
         
@@ -345,7 +389,7 @@
           if (indexUp && !middleUp) isDrawing = true;
         } else if (drawGesture === 'pinch') {
           if (pinchDist < 0.06) isDrawing = true;
-          // Smooth coords using the middle point of pinch for better accuracy
+          // Smooth coords using the middle point of pinch
           let midX = (landmarks[8].x + landmarks[4].x) / 2 * canvasElement.width;
           let midY = (landmarks[8].y + landmarks[4].y) / 2 * canvasElement.height;
           if (lostFrames <= 3 && currentPath !== null) {
@@ -361,12 +405,12 @@
         if (isDrawing) {
           lostFrames = 0;
           if (!currentPath) {
-            currentPath = { color: currentColor, thickness: brushThickness, isEraser: isEraser, neon: neonEnabled, points: [] };
+            currentPath = { color: currentColor, thickness: brushThickness, isEraser: isEraser, neon: neonEnabled, dash: dashEnabled, points: [] };
             paths.push(currentPath);
           }
-           // if properties changed mid-draw, break path
-          else if (currentPath.color !== currentColor || currentPath.thickness !== brushThickness || currentPath.isEraser !== isEraser || currentPath.neon !== neonEnabled) {
-            currentPath = { color: currentColor, thickness: brushThickness, isEraser: isEraser, neon: neonEnabled, points: [] };
+           // Break path if properties changed mid-draw
+          else if (currentPath.color !== currentColor || currentPath.thickness !== brushThickness || currentPath.isEraser !== isEraser || currentPath.neon !== neonEnabled || currentPath.dash !== dashEnabled) {
+            currentPath = { color: currentColor, thickness: brushThickness, isEraser: isEraser, neon: neonEnabled, dash: dashEnabled, points: [] };
             paths.push(currentPath);
           }
           currentPath.points.push({x: smoothX, y: smoothY});
@@ -390,9 +434,13 @@
       for (let p of paths) {
         if(p.points.length < 2) continue;
         
+        if(p.dash) {
+          canvasCtx.setLineDash([p.thickness * 2, p.thickness * 1.5]);
+        } else {
+          canvasCtx.setLineDash([]);
+        }
+        
         if (p.isEraser) {
-          // Eraser logic uses 'destination-out' to clear transparency (useful if camera mode) 
-          // or draws bg_color (if black/white)
           canvasCtx.shadowBlur = 0;
           if (bgMode === 'camera') {
             canvasCtx.globalCompositeOperation = 'destination-out';
@@ -401,7 +449,7 @@
             canvasCtx.globalCompositeOperation = 'source-over';
             canvasCtx.strokeStyle = (bgMode === 'black') ? '#000000' : '#ffffff';
           }
-          canvasCtx.lineWidth = p.thickness * 4; // Eraser is naturally wider
+          canvasCtx.lineWidth = p.thickness * 4; 
         } else {
           canvasCtx.globalCompositeOperation = 'source-over';
           canvasCtx.strokeStyle = p.color;
@@ -424,6 +472,7 @@
         canvasCtx.stroke();
       }
       
+      canvasCtx.setLineDash([]); // cleanup dash
       canvasCtx.globalCompositeOperation = 'source-over'; // reset
       canvasCtx.restore();
     }
